@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const express = require("express");
 const mime = require("mime-types");
 const multer = require("multer");
