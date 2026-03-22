@@ -3,14 +3,39 @@ services:
     build: .
     ports:
       - "3000:3000"
-    env_file:
-      - .env
-    depends_on:
-      - redis
     restart: unless-stopped
+    networks:
+      - proxy_public
+      - shared_services
+    environment:
+      # Server
+      PORT: "3000"
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    restart: unless-stopped
+      # R2
+      R2_BUCKET: "eaf"
+      R2_PUBLIC_BASE_URL: "https://pub-c54ecb6f6021463e95790b49774c4e8c.r2.dev"
+      R2_S3_ENDPOINT: "https://70a41e8a2dd0ed2395771e2a48c2a83a.r2.cloudflarestorage.com"
+      R2_REGION: "auto"
+      R2_ACCESS_KEY_ID: "c5114fb4b0fecd5a5f9469a2fec7bda2"
+      R2_SECRET_ACCESS_KEY: "3a0d894cf904dd9bf8d89c21a05a9cd2ff66b67fb8ee711612e9a80409ed084d"
+
+      # CRM
+      CRM_TOKEN_URL: "https://crm-bot-stg.sigaantenado.com.br/crm/bot/api/v1/authorization/service/get-token"
+      CRM_UPLOAD_FROM_URL_TEMPLATE: "https://crm-bot-stg.sigaantenado.com.br/crm/bot/api/v1/service/attachment/ticket/{ticketId}/upload-from-url"
+      CRM_UPDATE_FROM_URL_TEMPLATE: "https://crm-bot-stg.sigaantenado.com.br/crm/bot/api/v1/service/attachment/ticket/{ticketId}/{attachmentId}/upload-from-url"
+      CRM_USERNAME: "jefferson.soares@abjservicos.com.br"
+      CRM_PASSWORD: "Eaf@2026"
+
+      # Redis (já existe no servidor)
+      REDIS_URL: "redis://redis:6379"
+      REDIS_TTL_DAYS: "180"
+
+      # Limits / security
+      MAX_DOWNLOAD_MB: "25"
+      ALLOWED_URL_PROTOCOLS: "https,http"
+
+networks:
+  proxy_public:
+    external: true
+  shared_services:
+    external: true
