@@ -9,7 +9,7 @@ function buildSwaggerSpec() {
         version: "1.0.0"
       },
       servers: [
-        { url: "https://services-eaf.dkdevs.com.br/" }
+        { url: "https://services-eaf.dkdevs.com.br" }
       ],
       components: {
         schemas: {
